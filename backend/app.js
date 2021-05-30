@@ -62,6 +62,5 @@ console.log('decryption',encryption.decryptData('pGA6k3c3YT9YrqhgpeVqV6lkDr6vaEh
 /*console.log('encryption',encryption.encryptData('veilu'))
 console.log('decryption',encryption.decryptData(encryption.encryptData('veilu')))*/
 
-const moment = require('moment')
-console.log('as',moment().format('HH.MM'))
+
 module.exports = app;

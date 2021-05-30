@@ -1,0 +1,31 @@
+table {
+  width: 100%;
+}
+.profile-img {
+  border-radius: 50%;
+}
+
+.table_section{
+	background-color: white;
+}
+
+.patient_page{
+	margin: 50px;
+	border: 2px solid white;
+	border-radius:10px;
+}
+.slots{
+	margin-top: 9px;
+}
+
+.datepicker{
+	cursor: pointer;
+}
+
+.nav-item{
+	margin-left: 10px !important;
+}
+
+.title{
+	margin-top: 5px; 
+}

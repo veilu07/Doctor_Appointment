@@ -1,1 +1,103 @@
-<p>doctorslot works!</p>
+<section class="appointment">
+	<div class="container-md">
+		<h3 style="margin-left: 100px;"><p routerLink='/' style="display: inline;cursor: pointer;">Home</p> -> Appointement Slots</h3>
+		<div class="row">
+			<div class="col-4 align-self-center">
+				<div class="border border-light p-3 mb-4">
+					<div class="row">
+					  <div class="datepicker pr-3 pb-3">
+					    <bs-datepicker-inline [bsValue]="bsInlineValue" [minDate]="minDate"  (bsValueChange)="changeDate($event)"></bs-datepicker-inline>
+					  </div>
+					</div>
+		        </div>
+			</div>
+			<div class="col-8 align-self-center">
+				<div class="border border-light p-3 mb-4">
+					<div class="col-sm-12">
+						<span><!-- <fa-icon [icon]="faSun" class="icon-sun"></fa-icon> --> Morning Shift</span><br>
+						<span class="slot-time">{{mrgShift}}</span>
+						<button type="button" class="btn bg-transparent add-slot" (click)="openSlotModal(addSlot)">
+							<!-- <fa-icon [icon]="faPlus" class="icon-plus"></fa-icon>  -->
+							<span class="icon-plus">Add slot</span>
+						</button>
+						<div class="form-inline">
+							<div class="border-dark" *ngFor="let time of mrngTimeSlots">
+								<button type="button" class="btn btn-time" data-toggle="tooltip" title="{{time.status? 'Allocated': 'No Appointment'}} " [ngStyle]="{'background-color': time.status ? '#32CD32' : '#B8860B'}">
+									{{time.fromTimeValue}} - {{time.toTimeValue}}
+								</button>
+							</div>
+							<div *ngIf="mrngTimeSlots.length == 0" class="form-inline noSlot">
+								<p class="noSlot">No Slots available on {{slotFormData.slotDate |date:'mediumDate'}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<span><!-- <fa-icon [icon]="faSun" class="icon-sun"></fa-icon> --> Evening Shift</span><br>
+						<span class="slot-time">{{eveShift}}</span>	
+						<button type="button" class="btn bg-transparent add-slot" (click)="openSlotModal(addSlot)">
+							<!-- <fa-icon [icon]="faPlus" class="icon-plus"></fa-icon> -->
+							
+						</button>		
+						<div class="form-inline">
+							<div class="border-dark" *ngFor="let time of eveTimeSlots">
+								<button type="button" class="btn btn-time" data-toggle="tooltip" title="{{time.status? 'Allocated': 'No Appointment'}} " [ngStyle]="{'background-color': time.status ? '#32CD32' : '#B8860B'}">
+									{{time.fromTimeValue}} - {{time.toTimeValue}}
+								</button>
+							</div>
+							<div *ngIf="eveTimeSlots.length == 0" class="form-inline noSlot" >
+								<p class="noSlot">No Slots available on {{slotFormData.slotDate |date:'mediumDate'}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</section>
+
+<ng-template #addSlot>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Create Slot</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form name="slotForm" #slotForm='ngForm' autocomplete="off">
+    	<div class="form-group">
+	    	<div class="col-md-12">
+	    		<label>Slot Date</label>	
+	    	</div>	
+	    	<div class="col-md-12">
+	    		<label class="form-control">{{slotFormData.slotDate |date:'mediumDate'}}</label>
+	    	</div>	
+    	</div>
+    	<div class="form-group">
+	    	<div class="col-md-12">
+	    		<label>From Time</label>	
+	    	</div>	
+	    	<div class="col-md-12">
+	    		<select class="form-control" name="fromTime" [(ngModel)]="slotFormData.from" #fromTime='ngModel' required="" (change)="changeFromTime(fromTime)">
+	    			<option value="">--select From Time--</option>
+	    			<option *ngFor="let values of fromtimeValueArray;let i=index" [value]="values">{{values}}</option>
+	    		</select>
+	    	</div>	
+    	</div>
+    	<div class="form-group" [hidden]='slotFormData.enable'>
+	    	<div class="col-md-12">
+	    		<label>To Time</label>	
+	    	</div>	
+	    	<div class="col-md-12">
+	    		<input  class="form-control" type="text" name="toTime" [(ngModel)]="slotFormData.toTimeValue" #toTime='ngModel' readonly="">
+	    	</div>	
+    	</div>
+    	<div class="form-group" [hidden]='slotFormData.enable'>
+    		<div class="col-md-12">
+    			<button class="btn btn-info m-3" [disabled]="slotForm.invalid" (click)="createSlot(slotForm,addSlot)">Create Slot</button>
+    			<button (click)="modalRef.hide()" class="btn btn-danger">close</button>
+    		</div>
+    	</div>
+    </form>
+  </div>
+</ng-template>

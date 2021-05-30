@@ -65,11 +65,13 @@ exports.createDoctor = (req,res)=>{
 }
 
 exports.createSlot   = (req,res)=>{
-	try{
+	try{		
 		const validate = new Validator(req.body,		  
-		  { 'slotDate': 'required',
-		  	'from'	  : 'required',
-		  	'to'  	  : 'required'
+		  { 'slotDate'		  : 'required',
+		  	'fromTimeValue'	  : 'required',
+		  	'fromTimeKey'	  : 'required',
+		  	'toTimeValue'  	  : 'required',
+		  	'toTimeKey'  	  : 'required'
 		   }
 		);		
 		validate.check().then(function (matched) {		  
@@ -79,13 +81,13 @@ exports.createSlot   = (req,res)=>{
 			}
 			else{
 				var getDetails = req.body;
-				var slotFrom   = parseFloat(req.body.from);
-				var slotTo	   = parseFloat(req.body.to);
+				var slotFrom   = parseFloat(req.body.fromTimeKey);
+				var slotTo	   = parseFloat(req.body.toTimeKey);
 				var diffTime   = slotTo - slotFrom;
-
-				if( diffTime != 0 && diffTime == 0.7 ){
+				
+				if( diffTime != 0 && diffTime == 30 ){
 					var slotDate   = new Date(getDetails.slotDate)				
-					var date 	   = moment(slotDate);
+					var date 	   = moment(slotDate,"DD-MM-YYYY").add(1,'days');					
 					var curDate    = moment().format('MM-DD-YYYY');
 					
 					if(date.isValid()){
@@ -94,31 +96,54 @@ exports.createSlot   = (req,res)=>{
 						if(issameorafter){
 							var start 	  	= moment(date).startOf('day') 
 							var end 	  	= moment(date).endOf('day') 
-							var currentHM 	= moment().format('HH.MM')
-							var fromSlotTime= req.body.from;
-							if(parseFloat(currentHM) <= parseFloat(fromSlotTime) ){
-								var match={'slotDate':{$gte:new Date(start),$lt:new Date(end)},"slots":{'$elemMatch':{'from':req.body.from,'to':req.body.to}}}
+							var currentHM 	= moment().format('HH:MM')
+							var fromSlotTime= req.body.fromTimeValue;
+							var entrycheck  = moment(date).isSame(curDate) == true ? parseFloat(currentHM) <= parseFloat(fromSlotTime) : moment(date).isAfter(curDate); 							
+							if(entrycheck){
+								var match={'slotDate':{$gte:new Date(start),$lt:new Date(end)},"slots":{'$elemMatch':{'fromTimeValue':req.body.fromTimeValue,'toTimeValue':req.body.toTimeValue}}}
 								doctorSlotCol.find(match,(err,slotData)=>{
 									if(!err && slotData.length>0){
 										res.json({status:404,message:"Slot Already allocated"});
 										res.end()
 									}
-									else if(!err&& slotData.length == 0){
-										var createData   	  = {};
-										var slotArray 		  = [{'from':req.body.from,'to':req.body.to,status:false}];
-										createData.slotDate   = date;
-										createData.slots   	  = slotArray;
-										createData.date   	  = moment().format();
-										doctorSlotCol.create(createData,(err,createdata)=>{
-											if(!err && createdata){
-												res.json({status:200,message:"Slot Created Successfully"});
-												res.end()
+									else if(!err&& slotData.length == 0){										
+										var match={'slotDate':{$gte:new Date(start),$lt:new Date(end)}}
+										doctorSlotCol.find(match,(err,slotFindData)=>{
+											if( !err && slotFindData.length > 0 ){
+												var slotUpdateObj 		  = {'fromTimeValue':req.body.fromTimeValue,'toTimeValue':req.body.toTimeValue,status:false,'toTimeKey':req.body.toTimeKey,'fromTimeKey':req.body.fromTimeKey};
+												doctorSlotCol.updateOne({'_id':slotFindData[0]._id},{$push:{'slots':slotUpdateObj}},(err,updateData)=>{
+													if(!err && updateData){
+														res.json({status:200,message:"Slot Created Successfully",data:{'slots':slotUpdateObj}});
+														res.end()
+													}
+													else{
+														res.json({status:404,message:"Slot creation failed",data:err});
+														res.end()
+													}
+												})
+											}	
+											else if( !err && slotFindData.length == 0){
+												var createData   	  = {};
+												var slotArray 		  = [{'fromTimeValue':req.body.fromTimeValue,'toTimeValue':req.body.toTimeValue,status:false,'toTimeKey':req.body.toTimeKey,'fromTimeKey':req.body.fromTimeKey}];
+												createData.slotDate   = date;
+												createData.slots   	  = slotArray;
+												createData.date   	  = moment().format();
+												doctorSlotCol.create(createData,(err,createdata)=>{
+													if(!err && createdata){
+														res.json({status:200,message:"Slot Created Successfully ",data:createdata});
+														res.end()
+													}
+													else{
+														res.json({status:404,message:"Slot creation failed",data:err});
+														res.end()
+													}
+												})
 											}
 											else{
-												res.json({status:404,message:"Slot creation failed",data:err});
+												res.json({status:404,message:"Slot find failed",data:err});
 												res.end()
 											}
-										})
+										})	
 									}
 									else{
 										res.json({status:404,message:"Slot find failed",data:err});
@@ -172,16 +197,19 @@ exports.listAllSlotByDate = (req,res)=>{
 			else{
 				var getDetails = req.body;
 				var slotDate   = new Date(getDetails.date)				
-				var date 	   = moment(slotDate);
-				
+				var date 	   = moment(slotDate,"DD-MM-YYYY").add(1,'days');									
 				if(date.isValid()){
 					var start 	  = moment(date).startOf('day') 
 					var end 	  = moment(date).endOf('day') 
 					var match={'slotDate':{$gte:new Date(start),$lt:new Date(end)}}
 					doctorSlotCol.find(match,(err,slotData)=>{
-						if( !err && slotData.length >= 0 ){
-							res.json({status:200,message:"List Slots",data:slotData});
+						if( !err && slotData.length > 0 ){
+							res.json({status:200,message:"List Slots",data:slotData[0]});
 							res.end();
+						}
+						else if( !err && slotData.length == 0 ){
+							res.json({status:422,message:"Get Slot empty",data:[]});
+							res.end();	
 						}
 						else{
 							res.json({status:404,message:"Get Slot failed",data:err});
@@ -206,3 +234,8 @@ exports.listAllSlotByDate = (req,res)=>{
 		res.end();
 	}
 }
+
+
+/*function getslotAllocatePatent(records){
+
+}*/

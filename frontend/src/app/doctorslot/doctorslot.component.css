@@ -1,0 +1,31 @@
+.datepicker {
+	margin-left: 70px;
+}
+.btn-time {
+	margin-left: 20px;
+	background-color: transparent;
+	border-color: black;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+.add-slot {
+	margin-left: 500px;
+}
+.slot-time {
+	margin-left: 20px;
+}
+.icon-plus {
+	color: blue;
+}
+.icon-sun {
+	color: yellow;
+}
+
+[disabled]:hover{
+	cursor: not-allowed;
+}
+.noSlot{
+	text-align: center;
+	font-weight: bold;
+}
+
