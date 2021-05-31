@@ -1,6 +1,6 @@
 <section class="appointment">
 	<div class="container-md">
-		<h3 style="margin-left: 100px;"><p routerLink='/' style="display: inline;cursor: pointer;">Home</p> -> Appointement Slots</h3>
+		<h3 style="margin-left: 100px;color: white"><p routerLink='/' style="display: inline;cursor: pointer;color: white">Home</p> -> Appointement Slots</h3>
 		<div class="row">
 			<div class="col-4 align-self-center">
 				<div class="border border-light p-3 mb-4">
@@ -14,10 +14,10 @@
 			<div class="col-8 align-self-center">
 				<div class="border border-light p-3 mb-4">
 					<div class="col-sm-12">
-						<span><!-- <fa-icon [icon]="faSun" class="icon-sun"></fa-icon> --> Morning Shift</span><br>
-						<span class="slot-time">{{mrgShift}}</span>
-						<button type="button" class="btn bg-transparent add-slot" (click)="openSlotModal(addSlot)">
-							<!-- <fa-icon [icon]="faPlus" class="icon-plus"></fa-icon>  -->
+						<span class="text_clr">Morning Shift</span><br>
+						<span class="slot-time text_clr">{{mrgShift}}</span>
+						<button type="button" class="btn bg-transparent add-slot btn-primary" (click)="openSlotModal(addSlot)">
+							
 							<span class="icon-plus">Add slot</span>
 						</button>
 						<div class="form-inline">
@@ -32,8 +32,8 @@
 						</div>
 					</div>
 					<div class="col-sm-12">
-						<span><!-- <fa-icon [icon]="faSun" class="icon-sun"></fa-icon> --> Evening Shift</span><br>
-						<span class="slot-time">{{eveShift}}</span>	
+						<span class="text_clr">Evening Shift</span><br>
+						<span class="slot-time text_clr">{{eveShift}}</span>	
 						<button type="button" class="btn bg-transparent add-slot" (click)="openSlotModal(addSlot)">
 							<!-- <fa-icon [icon]="faPlus" class="icon-plus"></fa-icon> -->
 							

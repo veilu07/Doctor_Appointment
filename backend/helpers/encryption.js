@@ -1,7 +1,7 @@
 const CryptoJS  = require("crypto-js");
 const cryptokey = require('./safkney')
-var keyutf  	= CryptoJS.enc.Base64.parse('#VmLsvRTLODGHolVegiFy#');
-var iv 			= CryptoJS.enc.Base64.parse('#VmLsvRTLODGHolVegiFv#');
+var keyutf  	= CryptoJS.enc.Base64.parse(cryptokey.key);
+var iv 			= CryptoJS.enc.Base64.parse(cryptokey.iv);
 
 exports.encryptData = (value)=>{
 	try{
@@ -16,12 +16,8 @@ exports.encryptData = (value)=>{
 
 exports.decryptData = (value)=>{
 	try{
-		/*var  data 	 	   = CryptoJS.AES.decrypt({ ciphertext: CryptoJS.enc.Base64.parse(value)},keyutf,{iv: iv});
-        const originalText = CryptoJS.enc.Utf8.stringify(data)*/
-
         var data 		 = CryptoJS.AES.decrypt(value, keyutf, { iv: iv });
         var originalText = data.toString(CryptoJS.enc.Utf8)
-
 		return originalText;
 	}
 	catch(err){

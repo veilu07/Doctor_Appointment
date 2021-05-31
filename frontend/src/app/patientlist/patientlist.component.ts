@@ -29,14 +29,17 @@ export class PatientlistComponent implements OnInit,OnDestroy {
       }, {
         title: 'Token No'        
       }, {
-        title: 'patient Name'        
+        title: 'Patient Name'        
       }, {
         title: 'Phone Number'        
       }, {
         title: 'Slot Time'        
       }],
       searching:false,
-      paging:false
+      paging:false,
+      processing:true,
+      info:false,
+      lengthChange:false,
     };
     this.dtOptions1 = {      
       columns: [{
@@ -44,40 +47,43 @@ export class PatientlistComponent implements OnInit,OnDestroy {
       }, {
         title: 'Token No'        
       }, {
-        title: 'patient Name'        
+        title: 'Patient Name'        
       }, {
         title: 'Phone Number'        
       }, {
         title: 'Slot Time'        
       }],
       searching:false,
-      paging:false
+      paging:false,
+      info:false,
+      lengthChange:false,
+      processing:true
     };
   }
 
   changeDate(event:any){    
     this.selectDate = new Date(event);
+    this.service.startLoader();
     var path:any = 'patient/getPatientAppointmentsByDate';
     this.service.postData(path,{'date':this.selectDate}).subscribe((result:any)=>{            
       if( result.status == 200 ){
         this.todayPatientList     = [];
         this.historyPatientList   = [];        
         result.validation == 1 ? this.todayPatientList = result.data : this.historyPatientList = result.data;
-        this.dtTrigger.next();
-        this.dtTrigger1.next();
-
-      }
+       }
       else if( result.status == 422 ){
         this.todayPatientList     = [];
         this.historyPatientList   = [];
         
       }
       else{
+        this.service.showToaster('error',result.message)
         this.todayPatientList     = [];
         this.historyPatientList   = [];
         
       }
     });
+    this.service.stopLoader();
   }
 
 

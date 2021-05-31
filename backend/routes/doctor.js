@@ -5,9 +5,9 @@ var originValidation=require('./checkOrigin')
 
 router.post('/createDoctor',/*originValidation.checkOrigin,*/doctorController.createDoctor);
 
-router.post('/createSlot',/*originValidation.checkOrigin,*/doctorController.createSlot);
+router.post('/createSlot',originValidation.checkOrigin,doctorController.createSlot);
 
-router.post('/listAllSlotByDate',/*originValidation.checkOrigin,*/doctorController.listAllSlotByDate);
+router.post('/listAllSlotByDate',originValidation.checkOrigin,doctorController.listAllSlotByDate);
 
 
 module.exports = router;

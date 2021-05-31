@@ -3,6 +3,9 @@ const doctorSlotCol	= require('../models/doctorslots_model')
 const { Validator } = require('node-input-validator');
 const moment 		= require('moment');
 const encryption 	= require('../helpers/encryption');
+const patientCol	= require('../models/patient_model');
+const prefix   		= require('../checkList/prefix')
+const doctorSlotName= prefix.name+"Doctorslots";
 
 exports.createDoctor = (req,res)=>{
 	try{
@@ -130,7 +133,7 @@ exports.createSlot   = (req,res)=>{
 												createData.date   	  = moment().format();
 												doctorSlotCol.create(createData,(err,createdata)=>{
 													if(!err && createdata){
-														res.json({status:200,message:"Slot Created Successfully ",data:createdata});
+														res.json({status:200,message:"Slot Created Successfully ",data:{'slots':slotArray[0]}});
 														res.end()
 													}
 													else{
@@ -202,8 +205,8 @@ exports.listAllSlotByDate = (req,res)=>{
 					var start 	  = moment(date).startOf('day') 
 					var end 	  = moment(date).endOf('day') 
 					var match={'slotDate':{$gte:new Date(start),$lt:new Date(end)}}
-					doctorSlotCol.find(match,(err,slotData)=>{
-						if( !err && slotData.length > 0 ){
+					doctorSlotCol.find(match,async(err,slotData)=>{
+						if( !err && slotData.length > 0 ){							
 							res.json({status:200,message:"List Slots",data:slotData[0]});
 							res.end();
 						}
@@ -234,8 +237,3 @@ exports.listAllSlotByDate = (req,res)=>{
 		res.end();
 	}
 }
-
-
-/*function getslotAllocatePatent(records){
-
-}*/

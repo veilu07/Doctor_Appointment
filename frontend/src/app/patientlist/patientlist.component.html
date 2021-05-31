@@ -43,7 +43,7 @@
 				<div class="p-3 mb-4">
      				<mat-tab-group color="warn" backgroundColor="primary">
 					  <mat-tab label="Today Appointments"> 
-						<table datatable [dtOptions]="dtOptions" class="row-border hover" [dtTrigger]="dtTrigger">							
+						<table datatable [dtOptions]="dtOptions" class="row-border hover" >							
 						
 						  <tbody *ngIf="todayPatientList.length > 0">
 						  	<tr *ngFor='let todayList of todayPatientList;let i=index'>
@@ -62,7 +62,7 @@
 
 					  </mat-tab>					 
 					  <mat-tab label="Patient History">  
-					  	<table datatable [dtOptions]="dtOptions1" class="row-border hover" [dtTrigger]="dtTrigger1">
+					  	<table datatable [dtOptions]="dtOptions1" class="row-border hover" >
 						  <tbody *ngIf="historyPatientList.length > 0">
 						  	<tr *ngFor='let history of historyPatientList;let i=index'>
 						  		<td>{{i+1}}</td>

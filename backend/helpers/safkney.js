@@ -1,1 +1,1 @@
-module.exports = {'key':'NWcMKpKOzs'}
+module.exports = {'key':'#VmLsvRTLODGHolVegiFy#','iv':'#VmLsvRTLODGHolVegiFv#'}
